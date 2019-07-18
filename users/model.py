@@ -1,11 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+db = SQLAlchemy()
 
-class Users(Base):
+class Users(db.Model):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     email = Column(String(45))
@@ -18,7 +17,7 @@ class Users(Base):
         return "<Users(email='{}', rol='{}')>".format(self.email, self.rol.rol)
 
 
-class Rol(Base):
+class Rol(db.Model):
     __tablename__ = "rol"
     id = Column(Integer, primary_key=True)
     rol = Column(String(45))
@@ -36,10 +35,6 @@ if __name__ == "__main__":
         os.remove(db_name)
 
     engine = create_engine("mysql://flask:123456@localhost/flask_cisyg")
-    Base.metadata.create_all(engine)
-
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
 
     
     #Rol:
@@ -56,16 +51,16 @@ if __name__ == "__main__":
     # session.add(Users(email="jose@example.com", password="123456", rol_id=4))# 1
 
     # session.commit()
-    print("")
-    for u in session.query(Users).all():
-        print("")
-        print(u)
-        print("El usuario " + u.email + " tiene el rol "+ u.rol.rol)
+    # print("")
+    # for u in session.query(Users).all():
+        # print("")
+        # print(u)
+        # print("El usuario " + u.email + " tiene el rol "+ u.rol.rol)
     
-    print("")
-    print("")
+    # print("")
+    # print("")
 
-    for r in session.query(Rol).all():
-        print(r)
+    # for r in session.query(Rol).all():
+        # print(r)
 
 
