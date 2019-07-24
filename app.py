@@ -36,4 +36,11 @@ app.register_blueprint(home_mod)
 app.register_blueprint(user_mod)
 
 if __name__ == '__main__':
-    app.run()
+    from users.model import Users
+    u = Users()
+    u.password = 'cat'
+    print(u.password)
+    print(u.password_hash)
+    print(u.verify_password('dog'))
+    print(u.verify_password('cat'))
+    # app.run()

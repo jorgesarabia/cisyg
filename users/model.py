@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -8,13 +9,26 @@ class Users(db.Model):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     email = Column(String(45))
-    password = Column(String(45))
+    # password = Column(String(45))
+    password_hash = db.Column(db.String(128))
     rol_id = Column(Integer,ForeignKey('rol.id'))
 
     rol = relationship('Rol', backref='roles')
 
     def __repr__(self):
         return "<Users(email='{}', rol='{}')>".format(self.email, self.rol.rol)
+
+    @property
+    def password(self):
+        # raise AttributeError('password is not a readable attribute')
+        return '************'
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class Rol(db.Model):
@@ -27,14 +41,14 @@ class Rol(db.Model):
 
 
 if __name__ == "__main__":
-    import os
-    from sqlalchemy import create_engine
+    # import os
+    # from sqlalchemy import create_engine
 
-    db_name = 'cisyg.sqlite'
-    if os.path.exists(db_name):
-        os.remove(db_name)
+    # db_name = 'cisyg.sqlite'
+    # if os.path.exists(db_name):
+        # os.remove(db_name)
 
-    engine = create_engine("mysql://flask:123456@localhost/flask_cisyg")
+    # engine = create_engine("mysql://flask:123456@localhost/flask_cisyg")
 
     
     #Rol:
@@ -62,5 +76,9 @@ if __name__ == "__main__":
 
     # for r in session.query(Rol).all():
         # print(r)
+    # u =  User()
+    # u.password = 'cat'
+    # print(u.password_hash)
+    pass
 
 
