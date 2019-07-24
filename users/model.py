@@ -30,7 +30,6 @@ class Users(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-
 class Rol(db.Model):
     __tablename__ = "rol"
     id = Column(Integer, primary_key=True)
